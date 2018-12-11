@@ -7,7 +7,7 @@ function loadEmployees() {
         // if not exist yet get from dummy data and save it to local storage
         $.get('js/employees_data.json')
         .done(function(data) {
-            localStorage.employees = JSON.stringify(data);
+            syncModelToLocalStorage(data);
             loadEmployees();
         });
     } else {
@@ -93,7 +93,7 @@ function saveEmployee() {
     }
 
     employees[employeeId] = employee;
-    localStorage.employees = JSON.stringify(employees);
+    syncModelToLocalStorage()
 
     clearEmployee();
     loadEmployees();
@@ -149,6 +149,25 @@ function editEmployee() {
     addButtonToggle();
 }
 
+function deleteEmployee() {
+    if (confirm('Delete this employee?')) {
+        delete employees[selectedEmployeeId];
+        selectedEmployeeId = null;
+
+        syncModelToLocalStorage()
+
+        loadEmployees();
+    }
+}
+
+function syncModelToLocalStorage(data) {
+    if (typeof(data) == 'undefined') {
+        localStorage.employees = JSON.stringify(employees);
+    } else {
+        localStorage.employees = JSON.stringify(data);
+    }
+}
+
 $(document).ready(function() {
     loadEmployees();
 });
@@ -167,4 +186,8 @@ $('a.btn_add').click(function() {
 
 $('button.btn_edit').click(function() {
     editEmployee();
-})
+});
+
+$('button.btn_delete').click(function() {
+    deleteEmployee();
+});
