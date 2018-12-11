@@ -15,6 +15,8 @@ Basic function:
 - Show selected employee
 - Update employee
 - Delete employee
+- Sorting employee data by each column
+- Filter employee data using global search
 - See statistic of employees
 
 ## Installation
