@@ -23,12 +23,14 @@ function renderEmployees() {
     // remove existing rows
     the_table.find('tr').remove();
 
-    Object.values(employees).forEach(function(elm, idx) {
+    var employee_ids = Object.keys(employees);
+
+    employee_ids.forEach(function(elm, idx) {
         the_table.append(`
-            <tr>
-                <td>` + elm.first_name + ` ` + elm.last_name + `</td>
-                <td>` + countries[elm.country_id].name + `</td>
-                <td>` + elm.age + `</td>
+            <tr data-id="` + elm + `" onclick="loadEmployee(this)" style="cursor:pointer;">
+                <td>` + employees[elm].first_name + ` ` + employees[elm].last_name + `</td>
+                <td>` + countries[employees[elm].country_id].name + `</td>
+                <td>` + employees[elm].age + `</td>
             </tr>
         `);
     });
@@ -42,11 +44,19 @@ function addButtonToggle() {
     document.getElementById('form_add').parentNode.classList.remove('hidden')
 }
 
-function loadEmployee() {
-    // hide form view
+function loadEmployee(row) {
+    var employee = employees[row.dataset.id];
+
+    // load data
+    $('label[name=first_name_val]').text(employee.first_name);
+    $('label[name=last_name_val]').text(employee.last_name);
+    $('label[name=age_val]').text(employee.age);
+    $('label[name=country_val]').text(countries[employee.country_id].name);
+
+    // show form view
     document.getElementsByClassName('form_view')[0].classList.remove('hidden')
 
-    // show form add
+    // hide form add
     document.getElementById('form_add').parentNode.classList.add('hidden')
 }
 
