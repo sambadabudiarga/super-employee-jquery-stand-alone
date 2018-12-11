@@ -1,42 +1,37 @@
-function renderEmployees() {
-    var the_table = document.getElementById('data_list').getElementsByTagName('tbody')[0];
-    the_table
-    employees.forEach(function() {
 
-    });
-}
-
-function loadData() {
-    loadCountries();
-    loadEmployees();
-}
-
-function loadCountries() {
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange=function()
-    {
-        if(xhr.readyState == 4)
-        {
-            countries = JSON.parse(xhr.responseText);
-        } 
-    }; 
-
-    xhr.open("GET", "dummy_data/countries_data.json" , true);
-    xhr.send(null); 
-}
+var employees;
 
 function loadEmployees() {
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange=function()
-    {
-        if(xhr.readyState == 4)
-        {
-            employees = JSON.parse(xhr.responseText);
-        } 
-    }; 
+    // check if exists in local storage
+    if (typeof(localStorage.employees) == 'undefined') {
+        // if not exist yet get from dummy data and save it to local storage
+        $.get('js/employees_data.json')
+        .done(function(data) {
+            localStorage.employees = JSON.stringify(data);
+            loadEmployees();
+        });
+    } else {
+        // load from local storage
+        employees = JSON.parse(localStorage.employees);
+        renderEmployees();
+    }
+}
 
-    xhr.open("GET", "dummy_data/employees_data.json" , true);
-    xhr.send(null); 
+function renderEmployees() {
+    var the_table = $('table#data_list').find('tbody');
+
+    // remove existing rows
+    the_table.find('tr').remove();
+
+    Object.values(employees).forEach(function(elm, idx) {
+        the_table.append(`
+            <tr>
+                <td>` + elm.first_name + ` ` + elm.last_name + `</td>
+                <td>` + countries[elm.country_id].name + `</td>
+                <td>` + elm.age + `</td>
+            </tr>
+        `);
+    });
 }
 
 function addButtonToggle() {
@@ -54,3 +49,7 @@ function loadEmployee() {
     // show form add
     document.getElementById('form_add').parentNode.classList.add('hidden')
 }
+
+$(document).ready(function() {
+    loadEmployees();
+});
