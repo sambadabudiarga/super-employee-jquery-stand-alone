@@ -63,13 +63,20 @@
     <script type="text/javascript">
         var pageContent = 'home';
         var countries;
-        var employees;
 
         // set active list
         $('a[href="' + window.location + '"]').parent('li').addClass('active');
 
         function initPage() {
+            loadCountries();
             loadPage();
+        }
+
+        function loadCountries() {
+            $.get('js/countries_data.json')
+            .done(function(data) {
+                countries = data;
+            });
         }
 
         function loadPage() {
