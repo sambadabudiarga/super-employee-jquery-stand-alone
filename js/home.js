@@ -50,6 +50,84 @@ function loadEmployee() {
     document.getElementById('form_add').parentNode.classList.add('hidden')
 }
 
+function saveEmployee() {
+    var first_name = $('input[name=first_name]').val();
+    var last_name = $('input[name=last_name]').val();
+    var age = $('input[name=age]').val();
+    var country_id = $('select[name=country_id]').val();
+
+    employee = {
+        first_name: first_name,
+        last_name: last_name,
+        age: age,
+        country_id: country_id,
+    }
+
+    // validate input
+    if (!validateEmployee(employee)) {
+        return;
+    }
+
+    // save to local storage and reload data
+
+    // generate random id
+    employeeId = parseInt(Math.random() * 100000);
+
+    // check if there is any duplicate
+    while(typeof(employees[employeeId]) != 'undefined') {
+        employeeId = parseInt(Math.random() * 100000);
+    }
+
+    employees[employeeId] = employee;
+    localStorage.employees = JSON.stringify(employees);
+
+    clearEmployee();
+    loadEmployees();
+}
+
+function validateEmployee(employee) {
+    var isValid = true;
+
+    if (employee.first_name.trim().length == 0) {
+        alert('Input first name');
+        isValid = false;
+    }
+
+    if (employee.last_name.trim().length == 0) {
+        alert('Input last name');
+        isValid = false;
+    }
+
+    if (isNaN(employee.age) || employee.age.length == 0) {
+        alert('Age must be a number');
+        isValid = false;
+    }
+
+    if (parseFloat(employee.age) < 17) {
+        alert('At least 17yo to work here');
+        isValid = false;
+    }
+
+    if (typeof(employee.country_id) == 'undefined' || employee.country_id.trim().length == 0) {
+        alert('Select country');
+        isValid = false;
+    }
+
+    return isValid;
+}
+
+function clearEmployee() {
+    $('input[name=first_name]').val("");
+    $('input[name=last_name]').val("");
+    $('input[name=age]').val("");
+    $('select[name=country_id]').val("");
+}
+
 $(document).ready(function() {
     loadEmployees();
 });
+
+$(document).on('submit', 'form#form_add', function() {
+    saveEmployee();
+    return false;
+})
