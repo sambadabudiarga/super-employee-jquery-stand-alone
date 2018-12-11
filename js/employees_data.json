@@ -1,0 +1,32 @@
+{
+    "0": {
+        "first_name": "Sambada",
+        "last_name": "Budiarga",
+        "age": 28,
+        "country_id": 1
+    },
+    "1": {
+        "first_name": "Andry",
+        "last_name": "YS",
+        "age": 58,
+        "country_id": 1       
+    },
+    "2": {
+        "first_name": "Aysenur",
+        "last_name": "Brans",
+        "age": 27,
+        "country_id": 7
+    },
+    "3": {
+        "first_name": "Kimberly L.",
+        "last_name": "Leung",
+        "age": 24,
+        "country_id": 2
+    },
+    "4": {
+        "first_name": "Elizabeth K. Portillo",
+        "last_name": "Leung",
+        "age": 24,
+        "country_id": 2
+    }
+}

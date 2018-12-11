@@ -1,0 +1,26 @@
+{
+    "1": {
+        "code": "ID",
+        "name": "Indonesia"
+    },
+    "2": {
+        "code": "US",
+        "name": "United States"
+    },
+    "3": {
+        "code": "AU",
+        "name":"Australia"
+    },
+    "4":{
+        "code": "JP",
+        "name":"Japan"
+    },
+    "6":{
+        "code": "NL",
+        "name":"Netherland"
+    },
+    "7":{
+        "code": "PL",
+        "name":"Poland"
+    }
+}
