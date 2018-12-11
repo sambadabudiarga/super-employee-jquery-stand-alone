@@ -1,5 +1,5 @@
-
 var employees;
+var selectedEmployeeId;
 
 function loadEmployees() {
     // check if exists in local storage
@@ -45,7 +45,8 @@ function addButtonToggle() {
 }
 
 function loadEmployee(row) {
-    var employee = employees[row.dataset.id];
+    selectedEmployeeId = row.dataset.id;
+    var employee = employees[selectedEmployeeId];
 
     // load data
     $('label[name=first_name_val]').text(employee.first_name);
@@ -79,13 +80,16 @@ function saveEmployee() {
     }
 
     // save to local storage and reload data
-
-    // generate random id
-    employeeId = parseInt(Math.random() * 100000);
-
-    // check if there is any duplicate
-    while(typeof(employees[employeeId]) != 'undefined') {
+    if (selectedEmployeeId == null) {
+        // generate random id
         employeeId = parseInt(Math.random() * 100000);
+
+        // check if there is any duplicate
+        while(typeof(employees[employeeId]) != 'undefined') {
+            employeeId = parseInt(Math.random() * 100000);
+        }
+    } else {
+        employeeId = selectedEmployeeId;
     }
 
     employees[employeeId] = employee;
@@ -133,6 +137,18 @@ function clearEmployee() {
     $('select[name=country_id]').val("");
 }
 
+function editEmployee() {
+    clearEmployee();
+
+    var employee = employees[selectedEmployeeId];
+    $('input[name=first_name]').val(employee.first_name);
+    $('input[name=last_name]').val(employee.last_name);
+    $('input[name=age]').val(employee.age);
+    $('select[name=country_id]').val(employee.country_id);
+
+    addButtonToggle();
+}
+
 $(document).ready(function() {
     loadEmployees();
 });
@@ -140,4 +156,15 @@ $(document).ready(function() {
 $(document).on('submit', 'form#form_add', function() {
     saveEmployee();
     return false;
+});
+
+$('a.btn_add').click(function() {
+    selectedEmployeeId = null;
+
+    addButtonToggle();
+    return false;
+})
+
+$('button.btn_edit').click(function() {
+    editEmployee();
 })
