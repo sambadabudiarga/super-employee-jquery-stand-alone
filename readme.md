@@ -9,6 +9,14 @@ Basically contain:
 - Bootstrap CSS
 - Font Awesome
 
+Basic function:
+- Show employee listing
+- Create new employee
+- Show selected employee
+- Update employee
+- Delete employee
+- See statistic of employees
+
 ## Installation
 
 Just run the app in browser
