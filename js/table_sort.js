@@ -25,6 +25,10 @@ $(document).on('click', 'table#data_list thead th', function() {
         `<i class="sort_dir pull-right fa ` + fa_sort_dir + `"></i>`
     );
 
+    renderEmployees();
+});
+
+function sortData(sorted_employees) {
     var key_name;
 
     switch(active_column_sort) {
@@ -40,11 +44,11 @@ $(document).on('click', 'table#data_list thead th', function() {
             break;
     }
 
-    sortData(key_name);
-});
-
-function sortData(key_name) {
-    var sorted_employees = Object.values(employees).sort(function(a, b) {
+    if (typeof(sorted_employees) == 'undefined') {
+        sorted_employees = Object.values(employees);
+    }
+    
+    sorted_employees = sorted_employees.sort(function(a, b) {
         switch(key_name) {
             case 'name':
                 if (active_sort_dir == 'desc') 
@@ -64,16 +68,7 @@ function sortData(key_name) {
                 return a.age - b.age;
                 break;
         }
-        // return a.first_name == b.first_name ? 0 : +(a.first_name > b.first_name) || -1;
-
-        // if (a.first_name < b.first_name) {
-        //     return -1;
-        // }
-        // if (a.first_name > b.first_name) {
-        //     return 1;
-        // }
-        // return 0;
     });
 
-    renderEmployees(sorted_employees);
+    return sorted_employees;
 }

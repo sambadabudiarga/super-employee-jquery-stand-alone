@@ -1,11 +1,15 @@
 $(document).on('input', 'input[name=searchData]', function() {
-    var searchValue = this.value;
-    searchData(searchValue);
+    renderEmployees();
 });
 
-function searchData(searchValue) {
-    // sortData()
-    var filteredEmployees = Object.values(employees).filter(function(elm,idx) {
+function searchData(filteredEmployees) {
+    var searchValue = $('input[name=searchData]').val();
+
+    if (typeof(filteredEmployees) == 'undefined') {
+        filteredEmployees = Object.values(employees);
+    }
+
+    filteredEmployees = Object.values(employees).filter(function(elm,idx) {
         if (elm.first_name.toLowerCase().indexOf(searchValue) >= 0) {
             return true;
         }
@@ -25,6 +29,5 @@ function searchData(searchValue) {
         return false;
     });
 
-
-    renderEmployees(filteredEmployees);
+    return filteredEmployees;
 }

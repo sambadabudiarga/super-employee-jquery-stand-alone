@@ -27,6 +27,9 @@ function renderEmployees(custom_employees) {
         custom_employees = Object.values(employees);
     }
 
+    custom_employees = searchData(custom_employees);
+    custom_employees = sortData(custom_employees);
+
     custom_employees.forEach(function(elm, idx) {
         the_table.append(`
             <tr data-id="` + elm.id + `" onclick="loadEmployee(this)" style="cursor:pointer;">
