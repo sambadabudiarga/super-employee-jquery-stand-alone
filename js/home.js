@@ -179,8 +179,9 @@ function initJShome() {
     loadEmployees();
 }
 
-$(document).on('submit', 'form#form_add', function() {
+$(document).on('submit', 'form#form_add', function(e) {
     saveEmployee();
+    e.preventDefault();
     return false;
 });
 
