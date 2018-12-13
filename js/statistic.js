@@ -1,59 +1,107 @@
-var randomScalingFactor = function() {
-    return Math.round(Math.random() * 100 * (Math.random() > 0.5 ? -1 : 1));
-};
-
-var lineChartData = {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
-    datasets: [{
-        label: "My First dataset",
-        data: [randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor()],
-        yAxisID: "y-axis-1",
-    }, {
-        label: "My Second dataset",
-        data: [randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor()],
-        yAxisID: "y-axis-2"
-    }]
-};
+var Emp_Countries = {};
+var Emp_Datasets;
 
 function loadChart() {
-    lineChartData.datasets[0].data = [randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor()];
-    lineChartData.datasets[1].data = [randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor()];
+    var Country_No_Data = JSON.parse(JSON.stringify(countries));
+
+    Emp_Datasets = {};
+
+    Object.keys(countries).forEach(function(elm, idx) {
+        Emp_Countries[elm] = countries[elm].name;
+        Emp_Datasets[countries[elm].name] = {
+            "label": countries[elm].name,
+            "fill": false,
+            "spanGaps": true,
+            "borderColor": "rgba(" + parseInt(Math.random() * 200) + ", " + parseInt(Math.random() * 200) + ", " + parseInt(Math.random() * 200) + ", " + parseFloat(Math.random() * 1) + ")",
+            "pointBorderColor": "rgba(" + parseInt(Math.random() * 200) + ", " + parseInt(Math.random() * 200) + ", " + parseInt(Math.random() * 200) + ", " + parseFloat(Math.random() * 1) + ")",
+            "pointBackgroundColor": "rgba(" + parseInt(Math.random() * 200) + ", " + parseInt(Math.random() * 200) + ", " + parseInt(Math.random() * 200) + ", " + parseFloat(Math.random() * 1) + ")",
+            "pointHoverBackgroundColor": "#fff",
+            "pointHoverBorderColor": "rgba(" + parseInt(Math.random() * 200) + ", " + parseInt(Math.random() * 200) + ", " + parseInt(Math.random() * 200) + ", " + parseFloat(Math.random() * 1) + ")",
+            "data": []
+        };
+    })
+
+    // set data
+    Object.values(employees).forEach(function(elm, idx) {
+        if (typeof(Country_No_Data[elm.country_id]) != 'undefined') delete Country_No_Data[elm.country_id]
+
+        var y_count = 1;
+
+        var data_exists = Emp_Datasets[countries[elm.country_id].name].data.find(function(elm_2) {
+            return elm_2.x == elm.age;
+        });
+
+        // check if value exists
+        if (typeof(data_exists) != 'undefined') {
+            console.log('Ketemu sama di negara ' + countries[elm.country_id].name +',umur: ' + elm.age);
+            data_exists.y++;
+        } else {
+            Emp_Datasets[countries[elm.country_id].name].data.push({'x': elm.age, 'y': 1});
+        }
+    });
+
+    // remove country without data
+    Object.values(Country_No_Data).forEach(function(elm, idx) {
+        delete Emp_Datasets[elm.name];
+    });
 
     var ctx = document.getElementById("lineChart").getContext("2d");
-    window.myLine = Chart.Line(ctx, {
-        data: lineChartData,
+    window.myLine = new Chart(ctx, {
+        type: 'scatter',
+        showLine: true,
+        data: {
+            labels: Emp_Countries,
+            datasets: Emp_Datasets,
+        },
         options: {
-            responsive: true,
-            hoverMode: 'label',
-            stacked: false,
-            title:{
-                display:true,
-                text:'Chart.js Line Chart - Multi Axis'
-            },
             scales: {
-                xAxes: [{
-                    display: true,
-                    gridLines: {
-                        offsetGridLines: false
-                    }
-                }],
                 yAxes: [{
-                    type: "linear", // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-                    display: true,
-                    position: "left",
-                    id: "y-axis-1",
-                }, {
-                    type: "linear", // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-                    display: true,
-                    position: "right",
-                    id: "y-axis-2",
-
-                    // grid line settings
-                    gridLines: {
-                        drawOnChartArea: false, // only want the grid lines for one axis to show up
-                    },
-                }],
+                    ticks: {
+                        beginAtZero: true,
+                    }
+                }]
+            },
+            spanGaps: true,
+            legend: {
+                display: true,
+                position: 'top',
+            },
+            tooltips: {
+                callbacks: {
+                    label: function(tooltipItem, data) {
+                        return tooltipItem.datasetIndex + ' (Age ' + tooltipItem.xLabel + ') : ' + tooltipItem.yLabel;
+                    }
+                }
+            },
+            title: {
+                display: true,
+                text: 'Employee by Country and Age'
             }
         }
     });
 }
+
+function initJSstatistic() {
+    getHeaderInfo();
+    loadChart();
+}
+
+function getHeaderInfo() {
+    var avg_age = 0;
+    var sum_age = 0;
+    var count_employee = Object.keys(employees).length;
+
+    Object.values(employees).forEach(function(elm, idx) {
+        sum_age += parseInt(elm.age);
+    });
+
+    if (count_employee == 0) avg_age = 0;
+    else {
+        avg_age = sum_age/count_employee;
+    }
+
+    $("#employee_count").text(count_employee);
+    $("#employee_avg_age").text(avg_age);
+}
+
+initJSstatistic();

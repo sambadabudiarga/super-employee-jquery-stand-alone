@@ -103,13 +103,16 @@
         }
 
         function loadPageJs() {
-            var src_js = document.getElementById('page-js');
+            var src_js = document.getElementById('page-js-' + pageContent);
             if (!!src_js) src_js.parentNode.removeChild(src_js);
 
             src_js = document.createElement('script');
-            src_js.id = 'page-js';
+            src_js.id = 'page-js-' + pageContent;
             src_js.type = 'text/javascript';
-            src_js.src = "js/" + pageContent + ".js";
+            src_js.onload = function() {
+                setTimeout('initJS' + pageContent, 1);
+            }
+            src_js.src = "js/" + pageContent + ".js?_=" + (new Date().getTime());
 
             document.body.appendChild(src_js);
         }
@@ -128,7 +131,5 @@
                     });
                 });
     </script>
-
-    <script id="page-js"></script>
 </body>
 </html>

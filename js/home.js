@@ -175,9 +175,9 @@ function syncModelToLocalStorage(data) {
     }
 }
 
-$(document).ready(function() {
+function initJShome() {
     loadEmployees();
-});
+}
 
 $(document).on('submit', 'form#form_add', function() {
     saveEmployee();
@@ -198,3 +198,5 @@ $('button.btn_edit').click(function() {
 $('button.btn_delete').click(function() {
     deleteEmployee();
 });
+
+initJShome();
