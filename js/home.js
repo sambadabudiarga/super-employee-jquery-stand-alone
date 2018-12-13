@@ -17,20 +17,22 @@ function loadEmployees() {
     }
 }
 
-function renderEmployees() {
+function renderEmployees(custom_employees) {
     var the_table = $('table#data_list').find('tbody');
 
     // remove existing rows
     the_table.find('tr').remove();
 
-    var employee_ids = Object.keys(employees);
+    if (typeof(custom_employees) == 'undefined') {
+        custom_employees = Object.values(employees);
+    }
 
-    employee_ids.forEach(function(elm, idx) {
+    custom_employees.forEach(function(elm, idx) {
         the_table.append(`
-            <tr data-id="` + elm + `" onclick="loadEmployee(this)" style="cursor:pointer;">
-                <td>` + employees[elm].first_name + ` ` + employees[elm].last_name + `</td>
-                <td>` + countries[employees[elm].country_id].name + `</td>
-                <td>` + employees[elm].age + `</td>
+            <tr data-id="` + elm.id + `" onclick="loadEmployee(this)" style="cursor:pointer;">
+                <td>` + elm.first_name + ` ` + elm.last_name + `</td>
+                <td>` + countries[elm.country_id].name + `</td>
+                <td>` + elm.age + `</td>
             </tr>
         `);
     });
@@ -88,6 +90,8 @@ function saveEmployee() {
         while(typeof(employees[employeeId]) != 'undefined') {
             employeeId = parseInt(Math.random() * 100000);
         }
+
+        employee.id = employeeId;
     } else {
         employeeId = selectedEmployeeId;
     }
